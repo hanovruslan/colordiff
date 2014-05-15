@@ -1,0 +1,21 @@
+{
+    "name": "solarys/colordiff",
+    "description": "Library for finding color difference",
+    "homepage": "https://github.com/solarys/colordiff",
+    "license": "MIT",
+    "autoload": {
+        "psr-0": { "": "src/" }
+    },
+    "authors": [
+        {
+            "name": "Alexander Aleshin",
+            "email": "solarys.aleshin@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.4"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "4.1.*"
+    }
+}
