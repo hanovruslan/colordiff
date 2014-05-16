@@ -2,6 +2,8 @@
     "name": "solarys/colordiff",
     "description": "Library for finding color difference",
     "homepage": "https://github.com/solarys/colordiff",
+    "type": "library",
+    "keywords": ["color", "difference", "cie", "lab"],
     "license": "MIT",
     "autoload": {
         "psr-0": { "": "src/" }
