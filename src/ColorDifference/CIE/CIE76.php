@@ -7,7 +7,8 @@ namespace ColorDifference\CIE;
  *
  * @author solarys
  */
-class CIE76 {
+class CIE76 implements CIEInterface
+{
 
 
     /**
