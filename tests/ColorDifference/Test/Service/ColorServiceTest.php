@@ -39,24 +39,16 @@ class ColorServiceTest extends \PHPUnit_Framework_TestCase
      * @dataProvider differenceFixture
      * @param $color1
      * @param $color2
-     * @param $isHex
      * @param $expected
      */
-    public function testGetColorDifference($color1, $color2, $isHex, $expected)
+    public function testGetColorDifference($color1, $color2, $expected)
     {
-        if($isHex){
-            $rgb1 = $this->service->hex2rgb($color1);
-            $rgb2 = $this->service->hex2rgb($color2);
-        }else{
-            $rgb1 = $color1;
-            $rgb2 = $color2;
-        }
         $this->cie->expects($this->once())
             ->method('getColorDifference')
-            ->with($rgb1, $rgb2)
+            ->with($color1, $color2)
             ->will($this->returnValue($expected));
 
-        $result = $this->service->getColorDifference($color1, $color2, $isHex);
+        $result = $this->service->getColorDifference($color1, $color2);
         $this->assertEquals($expected, $result);
     }
 
@@ -126,15 +118,15 @@ class ColorServiceTest extends \PHPUnit_Framework_TestCase
     public function differenceFixture()
     {
         return [
-            [[255, 255, 255], [0, 0, 0], false, 100],
-            [[255, 0, 0], [0, 255, 0], false, 170.58],
-            [[255, 0, 0], [0, 0, 255], false, 176.33],
-            [[0, 255, 0], [0, 0, 255], false, 258.69],
-            [[0, 0, 0], [255, 255, 255], false, 100],
-            [[254, 254, 254], [255, 255, 255], false, 0.35],
-            [[254, 255, 255], [255, 255, 255], false, 0.36],
-            [[254, 254, 255], [255, 255, 255], false, 0.6],
-            [[1, 1, 1], [0, 0, 0], false, 0.27],
+            [[255, 255, 255], [0, 0, 0], 100],
+            [[255, 0, 0], [0, 255, 0], 170.58],
+            [[255, 0, 0], [0, 0, 255], 176.33],
+            [[0, 255, 0], [0, 0, 255], 258.69],
+            [[0, 0, 0], [255, 255, 255], 100],
+            [[254, 254, 254], [255, 255, 255], 0.35],
+            [[254, 255, 255], [255, 255, 255], 0.36],
+            [[254, 254, 255], [255, 255, 255], 0.6],
+            [[1, 1, 1], [0, 0, 0], 0.27],
         ];
     }
 

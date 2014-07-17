@@ -63,13 +63,14 @@ class ImageColorsService
 
     public function countColors($path, $colors, $step = 50, $maxDiff = 10)
     {
-        $imageColors = $this->getColors($path, $step);
+        $imageCountColors = $this->getColors($path, $step);
         $result = [];
+        $imageColors = array_keys($imageCountColors);
         foreach($colors as $color){
             $result[$color] = 0;
-            $colorsFound = $this->getColorService()->findHexColor($color, array_keys($imageColors), $maxDiff);
+            $colorsFound = $this->getColorService()->findHexColor($color, $imageColors, $maxDiff);
             foreach($colorsFound as $hexColor){
-                $result[$color] += $imageColors[$hexColor];
+                $result[$color] += $imageCountColors[$hexColor];
             }
         }
         return $result;

@@ -13,16 +13,26 @@ namespace ColorDifference\Test\Service;
 use ColorDifference\CIE\CIE76;
 use ColorDifference\Service\ColorService;
 use ColorDifference\Service\ImageColorsService;
+use ColorDifference\Test\ResourceLoader;
 
 class ImageColorServiceTest extends \PHPUnit_Framework_TestCase
 {
 
-    private $resDir = '/../../../res/';
+    /**
+     * @var ResourceLoader
+     */
+    private $resourceLoader;
 
     /**
      * @var ImageColorsService
      */
     private $service;
+
+    public function __construct($name = null, array $data = array(), $dataName = '')
+    {
+        parent::__construct($name, $data, $dataName);
+        $this->resourceLoader = new ResourceLoader();
+    }
 
     public function setUp()
     {
@@ -46,7 +56,7 @@ class ImageColorServiceTest extends \PHPUnit_Framework_TestCase
         $time = $this->microtime_float() - $startTime;
         $memory = memory_get_usage() - $startMemory;
 
-        printf(PHP_EOL."Select colors for step = %d time: %.5f sec, memory: %.2f KB".PHP_EOL, $step, $time, $memory/1024);
+        printf(PHP_EOL."Select colors for %s step = %d time: %.5f sec, memory: %.2f KB".PHP_EOL, $path, $step, $time, $memory/1024);
 
         $this->assertEquals($expected, count($colors));
     }
@@ -64,8 +74,8 @@ class ImageColorServiceTest extends \PHPUnit_Framework_TestCase
         $time = $this->microtime_float() - $startTime;
         $memory = memory_get_usage() - $startMemory;
 
-        printf(PHP_EOL."Count colors for step = %d, maxDiff = %f - time: %.5f sec, memory: %.2f KB".PHP_EOL,
-            $step, $maxDiff, $time, $memory/1024);
+        printf(PHP_EOL."Count colors for %s colors = %d step = %d, maxDiff = %f - time: %.5f sec, memory: %.2f KB".PHP_EOL,
+            $path, count($colors), $step, $maxDiff, $time, $memory/1024);
 
         $this->assertEquals($expected, $result);
     }
@@ -75,10 +85,16 @@ class ImageColorServiceTest extends \PHPUnit_Framework_TestCase
     public function colorsFixture()
     {
         return [
-            [$this->getResDir().'1.jpg', 10, 19532],
-            [$this->getResDir().'1.jpg', 20, 6564],
-            [$this->getResDir().'1.jpg', 30, 3174],
-            [$this->getResDir().'1.jpg', 40, 1870],
+            [$this->resourceLoader->getPath('1.jpg'), 10, 19532],
+            [$this->resourceLoader->getPath('1.jpg'), 20, 6564],
+            [$this->resourceLoader->getPath('1.jpg'), 30, 3174],
+            [$this->resourceLoader->getPath('1.jpg'), 40, 1870],
+            [$this->resourceLoader->getPath('1.jpg'), 60, 870],
+
+            [$this->resourceLoader->getPath('2.jpg'), 10, 3438],
+            [$this->resourceLoader->getPath('2.jpg'), 20, 930],
+            [$this->resourceLoader->getPath('2.jpg'), 30, 430],
+            [$this->resourceLoader->getPath('2.jpg'), 40, 251],
         ];
     }
 
@@ -86,7 +102,7 @@ class ImageColorServiceTest extends \PHPUnit_Framework_TestCase
     {
         return [
             [
-                $this->getResDir().'1.jpg',
+                $this->resourceLoader->getPath('1.jpg'),
                 20,
                 10,
                 [
@@ -101,22 +117,7 @@ class ImageColorServiceTest extends \PHPUnit_Framework_TestCase
                 ]
             ],
             [
-                $this->getResDir().'1.jpg',
-                10,
-                5,
-                [
-                    '#000000',
-                    '#111111',
-                    '#ffffff',
-                ],
-                [
-                    '#000000' => 239,
-                    '#111111' => 451,
-                    '#ffffff' => 391,
-                ]
-            ],
-            [
-                $this->getResDir().'1.jpg',
+                $this->resourceLoader->getPath('1.jpg'),
                 10,
                 10,
                 [
@@ -129,7 +130,98 @@ class ImageColorServiceTest extends \PHPUnit_Framework_TestCase
                     '#111111' => 1352,
                     '#ffffff' => 3970,
                 ]
-            ]
+            ],
+            [
+            $this->resourceLoader->getPath('2.jpg'),
+                20,
+                10,
+                [
+                    '#000000',
+                    '#111111',
+                    '#ffffff',
+
+                ],
+                [
+                    '#000000' => 57,
+                    '#111111' => 75,
+                    '#ffffff' => 147,
+                ]
+            ],
+            [
+                $this->resourceLoader->getPath('2.jpg'),
+                20,
+                10,
+                [
+                    '#000000',
+                    '#111111',
+                    '#222222',
+                    '#333333',
+                    '#444444',
+                    '#ffffff',
+
+                ],
+                [
+                    '#000000' => 57,
+                    '#111111' => 75,
+                    '#ffffff' => 147,
+                    '#222222' => 73,
+                    '#333333' => 52,
+                    '#444444' => 39,
+                ]
+            ],
+            [
+                $this->resourceLoader->getPath('2.jpg'),
+                10,
+                10,
+                [
+                    '#000000',
+                    '#111111',
+                    '#ffffff',
+                ],
+                [
+                    '#000000' => 237,
+                    '#111111' => 314,
+                    '#ffffff' => 552,
+                ]
+            ],
+            [
+                $this->resourceLoader->getPath('2.jpg'),
+                10,
+                10,
+                [
+                    '#000000',
+                    '#111111',
+                    '#222222',
+                    '#333333',
+                    '#444444',
+                    '#ffffff',
+
+                ],
+                [
+                    '#000000' => 237,
+                    '#111111' => 314,
+                    '#ffffff' => 552,
+                    '#222222' => 306,
+                    '#333333' => 173,
+                    '#444444' => 164,
+                ]
+            ],
+            [
+                $this->resourceLoader->getPath('2.jpg'),
+                5,
+                10,
+                [
+                    '#000000',
+                    '#111111',
+                    '#ffffff',
+                ],
+                [
+                    '#000000' => 937,
+                    '#111111' => 1270,
+                    '#ffffff' => 2179,
+                ]
+            ],
+
         ];
     }
 
@@ -138,11 +230,4 @@ class ImageColorServiceTest extends \PHPUnit_Framework_TestCase
         list($usec, $sec) = explode(" ", microtime());
         return ((float)$usec + (float)$sec);
     }
-
-    public function getResDir()
-    {
-        return realpath(__DIR__.$this->resDir).'/';
-    }
-
-
 } 
